@@ -1,0 +1,50 @@
+{
+    "$schema": "https://schema.tauri.app/config/2",
+    "productName": "云颜文字",
+    "version": "0.1.0",
+    "identifier": "cloudemoticon-rs",
+    "build": {
+        "removeUnusedCommands": true,
+        "beforeDevCommand": "pnpm dev",
+        "devUrl": "http://localhost:1420",
+        "beforeBuildCommand": "pnpm build",
+        "frontendDist": "../dist"
+    },
+    "app": {
+        "windows": [
+            {
+                "label": "main",
+                "title": "云颜文字",
+                "url": "main.html",
+                "width": 800,
+                "height": 600,
+                "center": true,
+                "visible": false
+            },
+            {
+                "label": "selector",
+                "title": "云颜文字",
+                "url": "selector.html",
+                "width": 320,
+                "height": 720,
+                "center": true,
+                "decorations": false,
+                "alwaysOnTop": true,
+                "visible": false
+            }
+        ],
+        "security": {
+            "csp": null
+        }
+    },
+    "bundle": {
+        "active": true,
+        "targets": "all",
+        "icon": [
+            "icons/32x32.png",
+            "icons/128x128.png",
+            "icons/128x128@2x.png",
+            "icons/icon.ico"
+        ]
+    }
+}

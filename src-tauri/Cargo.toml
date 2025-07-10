@@ -1,0 +1,52 @@
+cargo-features = ["trim-paths"]
+
+[package]
+name = "cloudemoticon-rs"
+version = "0.1.0"
+description = "A cloud solution to your favorite emoticons"
+authors = ["TransparentLC"]
+edition = "2024"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+# The `_lib` suffix may seem redundant but it is necessary
+# to make the lib name unique and wouldn't conflict with the bin name.
+# This seems to be only an issue on Windows, see https://github.com/rust-lang/cargo/issues/8519
+name = "cloudemoticon_rs_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+# 应用程序大小 | Tauri
+# https://v2.tauri.app/zh-cn/concept/size/
+
+[profile.dev]
+incremental = true
+rustflags = ["-Zthreads=8"]
+
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = "s"
+panic = "abort"
+strip = true
+trim-paths = "all"
+rustflags = ["-Cdebuginfo=0", "-Zthreads=8"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = ["tray-icon"] }
+tauri-plugin-opener = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+enigo = "0.5"
+tauri-plugin-clipboard-manager = "2"
+tauri-plugin-http = "2"
+tauri-plugin-fs = "2"
+tauri-plugin-dialog = "2"
+tauri-plugin-notification = "2"
+
+[target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
+tauri-plugin-global-shortcut = "2"
+tauri-plugin-single-instance = "2"

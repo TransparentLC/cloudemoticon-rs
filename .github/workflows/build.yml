@@ -1,0 +1,75 @@
+name: build
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os:
+          - windows-latest
+          # - ubuntu-latest
+          # - macos-latest
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: latest
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "*"
+          check-latest: true
+          cache: pnpm
+          cache-dependency-path: "**/package.json"
+      - name: Install frontend dependencies
+        run: pnpm install
+      - name: Biome check
+        run: pnpm exec biome ci
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: nightly
+      - name: Setup Rust cache
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: ./src-tauri -> target
+      - name: Check Rust host
+        shell: bash
+        id: rust-host
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          echo "rust_host=$(rustc -vV | grep 'host: ' | cut -d ' ' -f 2)" >> $GITHUB_OUTPUT
+      - name: Build
+        id: build
+        shell: bash
+        run: |
+          pnpm tauri-release
+          if [ $RUNNER_OS == "Windows" ]; then
+            choco install upx --no-progress
+            upx --ultra-brute src-tauri/target/release/cloudemoticon-rs.exe
+            echo "executable=target/release/opencl_vanity_gpg.exe" >> $GITHUB_OUTPUT
+          elif [ $RUNNER_OS == "Linux" ]; then
+            sudo apt install upx-ucl
+            upx --ultra-brute src-tauri/target/release/cloudemoticon-rs
+            echo "executable=target/release/opencl_vanity_gpg" >> $GITHUB_OUTPUT
+          elif [ $RUNNER_OS == "macOS" ]; then
+            # TODO
+          fi
+
+      - name: Upload result
+        uses: actions/upload-artifact@v4
+        with:
+          name: cloudemoticon-rs-${{ steps.rust-host.outputs.rust_host }}
+          path: ${{ steps.build.outputs.executable }}
