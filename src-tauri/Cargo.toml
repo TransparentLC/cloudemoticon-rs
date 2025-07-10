@@ -1,4 +1,4 @@
-cargo-features = ["trim-paths"]
+cargo-features = ["trim-paths", "profile-rustflags"]
 
 [package]
 name = "cloudemoticon-rs"
