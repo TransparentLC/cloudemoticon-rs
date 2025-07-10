@@ -55,6 +55,7 @@ jobs:
         id: build
         shell: bash
         run: |
+          rustup component add rust-src
           pnpm tauri-release
           if [ $RUNNER_OS == "Windows" ]; then
             choco install upx --no-progress
