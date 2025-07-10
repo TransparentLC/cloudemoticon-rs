@@ -60,11 +60,11 @@ jobs:
           if [ $RUNNER_OS == "Windows" ]; then
             choco install upx --no-progress
             upx --ultra-brute src-tauri/target/release/cloudemoticon-rs.exe
-            echo "executable=target/release/opencl_vanity_gpg.exe" >> $GITHUB_OUTPUT
+            echo "executable=src-tauri/target/release/cloudemoticon-rs.exe" >> $GITHUB_OUTPUT
           elif [ $RUNNER_OS == "Linux" ]; then
             sudo apt install upx-ucl
             upx --ultra-brute src-tauri/target/release/cloudemoticon-rs
-            echo "executable=target/release/opencl_vanity_gpg" >> $GITHUB_OUTPUT
+            echo "executable=src-tauri/target/release/cloudemoticon-rs" >> $GITHUB_OUTPUT
           elif [ $RUNNER_OS == "macOS" ]; then
             echo "TODO"
           fi
