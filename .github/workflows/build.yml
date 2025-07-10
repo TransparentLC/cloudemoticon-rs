@@ -35,11 +35,10 @@ jobs:
         run: pnpm install
       - name: Biome check
         run: pnpm exec biome ci
-
       - name: Setup Rust
-        uses: dtolnay/rust-toolchain@master
+        uses: dtolnay/rust-toolchain@nightly
         with:
-          toolchain: nightly
+          components: rust-src
       - name: Setup Rust cache
         uses: Swatinem/rust-cache@v2
         with:
@@ -55,7 +54,6 @@ jobs:
         id: build
         shell: bash
         run: |
-          rustup component add rust-src
           pnpm tauri-release
           if [ $RUNNER_OS == "Windows" ]; then
             choco install upx --no-progress
