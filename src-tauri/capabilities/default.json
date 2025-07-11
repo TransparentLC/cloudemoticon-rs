@@ -67,7 +67,6 @@
         },
         "fs:allow-remove",
         "dialog:allow-open",
-        "dialog:allow-save",
-        "notification:allow-notify"
+        "dialog:allow-save"
     ]
 }
