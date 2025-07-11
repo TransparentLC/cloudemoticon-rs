@@ -4,7 +4,7 @@
 
 本项目也是我自己在 2018 年左右编写的旧版[相同项目](https://github.com/TransparentLC/CloudEmoticon)的重制版。
 
-本项目使用 Rust+Tauri+Vue 编写，与官方桌面客户端相比，体积更小（小于 2 MB！），界面更美观，同时仍然保留了旧版的快速输入的特色功能～
+本项目使用 Rust+Tauri+Vue 编写，与官方桌面客户端相比，体积更小（只有 2 MB 左右！），界面更美观，同时仍然保留了旧版的快速输入的特色功能～
 
 *官方客户端使用 Electron 编写，只能复制颜文字，需要手动粘贴才能完成输入。*
 
@@ -15,6 +15,10 @@
     <source media="(prefers-color-scheme: light)" srcset="https://p.sda1.dev/25/f71030d4d82c8f7d81e8e2f5f2b182e0/c_A0.webp">
     <img src="https://p.sda1.dev/25/f71030d4d82c8f7d81e8e2f5f2b182e0/c_A0.webp">
 </picture>
+
+> [!NOTE]
+>
+> 如果你是 Linux 用户并且使用 KDE 桌面，为了正常使用快速输入，你可能需要在“窗口行为”中关闭“阻止焦点抢占”。参考：[Cannot have focus on Ubuntu GNOME · Issue #6310 · tauri-apps/tauri](https://github.com/tauri-apps/tauri/issues/6310#issuecomment-1518694428)
 
 ## 使用演示
 
@@ -116,7 +120,7 @@ pnpm exec biome check --write
 ### TODO
 
 * [ ] 显示和添加官方源的界面
-* [ ] Linux 版
+* [x] Linux 版
 * [ ] ~~macOS 版~~
     * 虽然整个技术栈都是跨平台的，但是我没有 macOS 设备，对 macOS 也不熟，所以没办法编写和测试
     * 当然你还是可以尝试让它能在 macOS 上跑起来，大概是可行的
