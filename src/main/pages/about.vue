@@ -15,18 +15,32 @@
                 ></n-image>
             </template>
             <template #footer>
-                <n-popover trigger="hover">
-                    <template #trigger>
-                        <n-button @click="openUrl('https://github.com/TransparentLC/cloudemoticon-rs')">
-                            <template #icon><n-mdi :icon="mdiGithub"></n-mdi></template>
-                            GitHub 仓库
-                        </n-button>
-                    </template>
-                    <n-image
-                        src="https://img.shields.io/github/stars/TransparentLC/cloudemoticon-rs?style=social"
-                        preview-disabled
-                    ></n-image>
-                </n-popover>
+                <n-flex>
+                    <n-popover trigger="hover">
+                        <template #trigger>
+                            <n-button @click="openUrl('https://github.com/TransparentLC/cloudemoticon-rs')">
+                                <template #icon><n-mdi :icon="mdiGithub"></n-mdi></template>
+                                GitHub 仓库
+                            </n-button>
+                        </template>
+                        <n-image
+                            src="https://img.shields.io/github/stars/TransparentLC/cloudemoticon-rs?style=social"
+                            preview-disabled
+                        ></n-image>
+                    </n-popover>
+                    <n-button
+                        v-if="version && latestVersion && compare(version, latestVersion, '<')"
+                        @click="openUrl(`https://github.com/TransparentLC/cloudemoticon-rs/releases/tag/v${latestVersion}`)"
+                        type="primary"
+                    >
+                        <template #icon><n-mdi :icon="mdiTrayArrowUp"></n-mdi></template>
+                        更新可用 v{{ latestVersion }}
+                    </n-button>
+                    <n-button v-else @click="checkUpdate">
+                        <template #icon><n-mdi :icon="mdiTrayArrowUp"></n-mdi></template>
+                        检查更新
+                    </n-button>
+                </n-flex>
             </template>
         </n-result>
         <div>
@@ -51,18 +65,40 @@
 </template>
 
 <script setup lang="ts">
-import { mdiGithub } from '@mdi/js';
+import { mdiGithub, mdiTrayArrowUp } from '@mdi/js';
 import { getVersion } from '@tauri-apps/api/app';
 import { openUrl } from '@tauri-apps/plugin-opener';
+import { compare } from 'compare-versions';
 import { onMounted, ref } from 'vue';
+import wretch from 'wretch';
 import icon from '../../assets/icon.svg';
 import NMdi from '../../components/mdi.vue';
 
 const version = ref('');
+const latestVersion = ref('');
+const checkUpdate = (withMessage: boolean = true) =>
+    wretch(
+        'https://api.github.com/repos/TransparentLC/cloudemoticon-rs/releases',
+    )
+        .get()
+        .json<{ tag_name: string }[]>()
+        .then(r => {
+            latestVersion.value = r[0].tag_name.replace(/^v/, '');
+            if (
+                compare(version.value, latestVersion.value, '>=') &&
+                withMessage
+            )
+                window.chiya.message.info('已经是最新版了');
+        })
+        .catch(err => {
+            if (withMessage) window.chiya.message.error(err.toString());
+        });
 
 onMounted(() =>
     getVersion().then(r => {
         version.value = r;
+        checkUpdate(false);
+        setInterval(() => checkUpdate(false), 8 * 60 * 60 * 1000);
     }),
 );
 </script>
