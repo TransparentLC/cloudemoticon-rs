@@ -33,6 +33,22 @@ if (await exists(sourcesFile)) {
     await writeTextFile(sourcesFile, JSON.stringify(store.sources, null, 4));
 }
 
+// 自动输入窗口会触发这个事件来获取已加载的源
+// 但是要等到初始加载完成后才能返回
+let emoticonStoreInitedResolve: () => void;
+const emoticonStoreInited = new Promise<void>(resolve => {
+    emoticonStoreInitedResolve = resolve;
+});
+listen('update-emoticon-emit', async () => {
+    await emoticonStoreInited;
+    store.emoticon.forEach((v, k) =>
+        emit('update-emoticon', {
+            key: k,
+            value: v,
+        }),
+    );
+});
+
 createApp(app).use(router).mount('#app');
 
 // 注册显示和隐藏自动输入窗口的快捷键
@@ -49,15 +65,9 @@ await register(store.config.shortcut, e => {
 );
 
 // 初始加载所有订阅源
-await updateSources(true).catch(e => window.chiya.message.error(e));
-listen('update-emoticon-emit', () =>
-    store.emoticon.forEach((v, k) =>
-        emit('update-emoticon', {
-            key: k,
-            value: v,
-        }),
-    ),
-);
+await updateSources(true)
+    .then(() => emoticonStoreInitedResolve())
+    .catch(e => window.chiya.message.error(e));
 
 // 定时更新所有订阅源
 setTimeout(async () => {

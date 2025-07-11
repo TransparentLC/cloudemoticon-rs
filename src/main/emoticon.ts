@@ -101,6 +101,15 @@ export const updateSources = (useCache: boolean) =>
     Promise.all(
         store.sources.map(async source => {
             const cacheKey = getCacheKey(source);
+            const update = async () => {
+                const emoticon = await fetchEmoticon(source);
+                store.emoticon.set(cacheKey, emoticon);
+                await emit('update-emoticon', {
+                    key: cacheKey,
+                    value: emoticon,
+                });
+                await cacheEmoticon(emoticon);
+            };
             if (useCache) {
                 const emoticonCached = await fetchCachedEmoticon(source);
                 if (emoticonCached !== null) {
@@ -110,10 +119,9 @@ export const updateSources = (useCache: boolean) =>
                         value: emoticonCached,
                     });
                 }
+                update();
+            } else {
+                await update();
             }
-            const emoticon = await fetchEmoticon(source);
-            store.emoticon.set(cacheKey, emoticon);
-            await emit('update-emoticon', { key: cacheKey, value: emoticon });
-            await cacheEmoticon(emoticon);
         }),
     );
