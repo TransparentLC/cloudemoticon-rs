@@ -56,7 +56,6 @@ jobs:
           if [ $RUNNER_OS == "Windows" ]; then
             choco install upx --no-progress
           elif [ $RUNNER_OS == "Linux" ]; then
-            sudo apt update
             sudo apt install \
               libwebkit2gtk-4.1-dev \
               build-essential \
