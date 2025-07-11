@@ -50,23 +50,42 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           echo "rust_host=$(rustc -vV | grep 'host: ' | cut -d ' ' -f 2)" >> $GITHUB_OUTPUT
+      - name: Install system dependencies
+        shell: bash
+        run: |
+          if [ $RUNNER_OS == "Windows" ]; then
+            choco install upx --no-progress
+          elif [ $RUNNER_OS == "Linux" ]; then
+            sudo apt update
+            sudo apt install \
+              libwebkit2gtk-4.1-dev \
+              build-essential \
+              curl \
+              wget \
+              file \
+              libxdo-dev \
+              libssl-dev \
+              libayatana-appindicator3-dev \
+              librsvg2-dev \
+              upx-ucl
+          elif [ $RUNNER_OS == "macOS" ]; then
+            echo "TODO"
+          fi
       - name: Build
         id: build
         shell: bash
         run: |
           pnpm tauri-release
           if [ $RUNNER_OS == "Windows" ]; then
-            choco install upx --no-progress
-            upx --ultra-brute src-tauri/target/release/cloudemoticon-rs.exe
             echo "executable=src-tauri/target/release/cloudemoticon-rs.exe" >> $GITHUB_OUTPUT
           elif [ $RUNNER_OS == "Linux" ]; then
-            sudo apt install upx-ucl
-            upx --ultra-brute src-tauri/target/release/cloudemoticon-rs
             echo "executable=src-tauri/target/release/cloudemoticon-rs" >> $GITHUB_OUTPUT
           elif [ $RUNNER_OS == "macOS" ]; then
             echo "TODO"
           fi
-
+      - name: Apply UPX compression
+        shell: bash
+        run: upx --ultra-brute ${{ steps.build.outputs.executable }}
       - name: Upload result
         uses: actions/upload-artifact@v4
         with:
