@@ -2,7 +2,7 @@ cargo-features = ["trim-paths", "profile-rustflags"]
 
 [package]
 name = "cloudemoticon-rs"
-version = "0.1.1"
+version = "0.1.2"
 description = "A cloud solution to your favorite emoticons"
 authors = ["TransparentLC"]
 edition = "2024"
