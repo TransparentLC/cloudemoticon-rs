@@ -119,8 +119,9 @@ import NMdi from '../components/mdi.vue';
 const config = reactive<CloudEmoticonConfig>({
     theme: 'auto',
     mode: 'copy-paste',
-    shortcut: 'CommandOrControl+N',
+    shortcut: 'Ctrl+Shift+E',
     updateInterval: 480,
+    storeRepository: 'cloud-emoticon/store-repos',
 });
 
 const osTheme = useOsTheme();
@@ -227,6 +228,7 @@ const triggerInput = (i: number) => {
 
 onMounted(() =>
     addEventListener('keydown', e => {
+        if (e.key === 'Escape') return invoke('show_selector');
         if (!emoticon.value.size) return;
         if (e.ctrlKey && e.key === '-') {
             emoticonRepositoryIndex.value =
