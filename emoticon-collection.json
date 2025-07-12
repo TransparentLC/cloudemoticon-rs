@@ -1,0 +1,14 @@
+{
+    "$schema": "https://github.com/cloud-emoticon/store-repos/raw/master/schema/RepositoryMetadata.json",
+    "name": "Akarin's emoticon collection",
+    "location": {
+        "type": "remoteJson",
+        "remoteUrl": "https://i.akarin.dev/emoticon-collection.json"
+    },
+    "description": "自用",
+    "author": {
+        "name": "✨小透明・宸✨",
+        "url": "https://akarin.dev/",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/47057319?v=4&size=64"
+    }
+}

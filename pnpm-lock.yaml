@@ -21,7 +21,7 @@ importers:
         specifier: ^2.3.0
         version: 2.3.0
       '@tauri-apps/plugin-dialog':
-        specifier: ~2.3.0
+        specifier: ^2.3.0
         version: 2.3.0
       '@tauri-apps/plugin-fs':
         specifier: ^2.4.0
@@ -33,7 +33,7 @@ importers:
         specifier: ^2.5.0
         version: 2.5.0
       '@tauri-apps/plugin-notification':
-        specifier: ~2.3.0
+        specifier: ^2.3.0
         version: 2.3.0
       '@tauri-apps/plugin-opener':
         specifier: ^2.4.0
@@ -44,6 +44,9 @@ importers:
       naive-ui:
         specifier: ^2.42.0
         version: 2.42.0(vue@3.5.17(typescript@5.8.3))
+      tiny-async-pool:
+        specifier: ^2.1.0
+        version: 2.1.0
       vue:
         specifier: ^3.5.17
         version: 3.5.17(typescript@5.8.3)
@@ -60,6 +63,9 @@ importers:
       '@tauri-apps/cli':
         specifier: ^2.6.2
         version: 2.6.2
+      '@types/tiny-async-pool':
+        specifier: ^2.0.3
+        version: 2.0.3
       '@vitejs/plugin-vue':
         specifier: ^6.0.0
         version: 6.0.0(vite@7.0.4)(vue@3.5.17(typescript@5.8.3))
@@ -554,6 +560,9 @@ packages:
   '@types/lodash@4.17.18':
     resolution: {integrity: sha512-KJ65INaxqxmU6EoCiJmRPZC9H9RVWCRd349tXM2M3O5NA7cY6YL7c0bHAHQ93NOfTObEQ004kd2QVHs/r0+m4g==}
 
+  '@types/tiny-async-pool@2.0.3':
+    resolution: {integrity: sha512-n3l1s538tKo9RBoHs4I3DG/VmD3VYhF5mHcgu1sU4Lq7JCNBtxnpBy3OkWSbZsp5r5QOuplh2UkXXXwufoAuNQ==}
+
   '@vitejs/plugin-vue@6.0.0':
     resolution: {integrity: sha512-iAliE72WsdhjzTOp2DtvKThq1VBC4REhwRcaA+zPAAph6I+OQhUXv+Xu2KS7ElxYtb7Zc/3R30Hwv1DxEo7NXQ==}
     engines: {node: ^20.19.0 || >=22.12.0}
@@ -842,6 +851,9 @@ packages:
 
   strip-literal@3.0.0:
     resolution: {integrity: sha512-TcccoMhJOM3OebGhSBEmp3UZ2SfDMZUEBdRA/9ynfLi8yYajyWX3JiXArcJt4Umh4vISpspkQIY8ZZoCqjbviA==}
+
+  tiny-async-pool@2.1.0:
+    resolution: {integrity: sha512-ltAHPh/9k0STRQqaoUX52NH4ZQYAJz24ZAEwf1Zm+HYg3l9OXTWeqWKyYsHu40wF/F0rxd2N2bk5sLvX2qlSvg==}
 
   tinyglobby@0.2.14:
     resolution: {integrity: sha512-tX5e7OM1HnYr2+a2C/4V0htOcSQcoSTH9KgJnVvNm5zm/cyEWKJ7j7YutsH9CxMdtOkkLFy2AHrMci9IM8IPZQ==}
@@ -1286,6 +1298,8 @@ snapshots:
 
   '@types/lodash@4.17.18': {}
 
+  '@types/tiny-async-pool@2.0.3': {}
+
   '@vitejs/plugin-vue@6.0.0(vite@7.0.4)(vue@3.5.17(typescript@5.8.3))':
     dependencies:
       '@rolldown/pluginutils': 1.0.0-beta.19
@@ -1635,6 +1649,8 @@ snapshots:
   strip-literal@3.0.0:
     dependencies:
       js-tokens: 9.0.1
+
+  tiny-async-pool@2.1.0: {}
 
   tinyglobby@0.2.14:
     dependencies:

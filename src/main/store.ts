@@ -7,11 +7,12 @@ const store = reactive({
         mode: 'copy-paste',
         shortcut: 'Ctrl+Shift+E',
         updateInterval: 480,
+        storeRepository: 'cloud-emoticon/store-repos',
     } as CloudEmoticonConfig,
     sources: [] as string[],
     emoticon: new Map<string, Emoticon>(),
     nextUpdateTime: new Date(),
-    nextUpdateRightNowTrigger: (..._args: unknown[]) => {},
+    nextUpdateRightNowTrigger: () => {},
 });
 
 watch(

@@ -74,7 +74,7 @@
             添加本地源
         </n-button>
     </n-flex>
-    <n-list bordered show-divider>
+    <n-list bordered show-divider style="margin-bottom:1em">
         <n-list-item v-if="!store.sources.length">
             <n-result
                 title="这里空空的"
@@ -126,6 +126,81 @@
             </template>
         </n-list-item>
     </n-list>
+    <n-flex align="center" style="margin-bottom:.5em">
+        <n-el tag="strong" style="color:var(--primary-color);flex-grow:1">源商店</n-el>
+        <n-button @click="storeListLoad">
+            <template #icon><n-mdi :icon="mdiRefresh"></n-mdi></template>
+            刷新
+        </n-button>
+        <n-button @click="
+            chiya.dialog.prompt({
+                title: '修改源商店仓库',
+                defaultValue: store.config.storeRepository,
+                placeholder: 'cloud-emoticon/store-repos',
+            }).then(r => {
+                if (r === null) return;
+                r = r || 'cloud-emoticon/store-repos';
+                if (!r.match(/^[^\s\/]+\/[^\s\/]+$/)) return chiya.message.error('请填写 GitHub 仓库名称，格式形如 owner/repo');
+                store.config.storeRepository = r;
+                storeListLoad();
+            })
+        ">
+            <template #icon><n-mdi :icon="mdiStoreOutline"></n-mdi></template>
+            设置仓库
+        </n-button>
+    </n-flex>
+    <n-list bordered show-divider>
+        <n-list-item v-if="storeListTotal === null">
+            <n-spin style="width:100%;margin:1em 0">
+                <template #description>加载中</template>
+            </n-spin>
+        </n-list-item>
+        <n-list-item v-else-if="storeListLoaded < storeListTotal">
+            <n-spin style="width:100%;margin:1em 0">
+                <template #description>加载中（{{ storeListLoaded }}/{{ storeListTotal }}）</template>
+            </n-spin>
+        </n-list-item>
+        <n-list-item v-else-if="storeListTotal === 0">
+            <n-result
+                title="这里空空的"
+                description="这个仓库什么都没有呢……"
+            ></n-result>
+        </n-list-item>
+        <n-list-item v-else v-for="e in storeList">
+            <template #prefix>
+                <n-flex align="center">
+                    <n-avatar
+                        v-if="e.metadata.author.avatarUrl"
+                        round
+                        size="large"
+                        :src="e.metadata.author.avatarUrl"
+                    ></n-avatar>
+                    <n-avatar v-else round size="large"><n-mdi :icon="mdiAccount"></n-mdi></n-avatar>
+                </n-flex>
+            </template>
+            <n-text
+                tag="div"
+                style="white-space:nowrap;text-overflow:ellipsis;overflow:hidden"
+            >{{ `${e.metadata.name} by ${e.metadata.author.name}` }}</n-text>
+            <n-text
+                depth="3"
+                tag="small"
+                underline
+                style="white-space:nowrap;text-overflow:ellipsis;overflow:hidden;display:block;cursor:pointer"
+                @click="writeText(e.source).then(() => chiya.message.info('已复制 URL'))"
+            >{{ e.source }}</n-text>
+            <template #suffix>
+                <n-flex :wrap="false">
+                    <n-button
+                        quaternary circle
+                        @click="addSource(e.source, true, true)"
+                    >
+                        <template #icon><n-mdi :icon="mdiPlus"></n-mdi></template>
+                    </n-button>
+                </n-flex>
+            </template>
+        </n-list-item>
+    </n-list>
 </template>
 
 <script setup lang="ts">
@@ -135,7 +210,9 @@ import {
     mdiContentSave,
     mdiFileDocumentOutline,
     mdiLinkVariant,
+    mdiPlus,
     mdiRefresh,
+    mdiStoreOutline,
 } from '@mdi/js';
 import { emit } from '@tauri-apps/api/event';
 import { join } from '@tauri-apps/api/path';
@@ -143,6 +220,9 @@ import { writeText } from '@tauri-apps/plugin-clipboard-manager';
 import { open } from '@tauri-apps/plugin-dialog';
 import { remove, writeTextFile } from '@tauri-apps/plugin-fs';
 import { NInput } from 'naive-ui';
+import asyncPool from 'tiny-async-pool';
+import { onMounted, ref } from 'vue';
+import wretch from 'wretch';
 import NMdi from '../../components/mdi.vue';
 import { cacheEmoticon, fetchEmoticon, getCacheKey } from '../emoticon';
 import { configFile, emoticonCacheDir, sourcesFile } from '../path';
@@ -259,4 +339,51 @@ const deleteSource = async (sourceIndex: number) => {
     await writeTextFile(sourcesFile, JSON.stringify(store.sources, null, 4));
     window.chiya.message.success(`已删除“${name}”`);
 };
+
+const storeListLoaded = ref(0);
+const storeListTotal = ref<number | null>(null);
+const storeList = ref<{ source: string; metadata: EmoticonMetadata }[]>([]);
+const storeListLoad = async () => {
+    storeListLoaded.value = 0;
+    storeList.value.length = 0;
+    if (!store.config.storeRepository) {
+        storeListTotal.value = 0;
+        return;
+    } else {
+        storeListTotal.value = null;
+    }
+    try {
+        const repoContents = await wretch(
+            `https://api.github.com/repos/${store.config.storeRepository}/contents/`,
+        )
+            .get()
+            .json<
+                { name: string; download_url: string; type: 'file' | 'dir' }[]
+            >()
+            .then(r =>
+                r.filter(
+                    e => e.type === 'file' && e.name.match(/\.meta\.json$/i),
+                ),
+            );
+        storeListTotal.value = repoContents.length;
+        for await (const [source, metadata] of asyncPool(
+            4,
+            repoContents,
+            (repoContent: { name: string; download_url: string }) =>
+                wretch(repoContent.download_url)
+                    .get()
+                    .json<EmoticonMetadata>()
+                    .then(metadata => [repoContent.download_url, metadata]),
+        )) {
+            storeList.value.push({ source, metadata });
+            storeListLoaded.value++;
+        }
+        storeList.value = storeList.value.sort((a, b) =>
+            a.metadata.name.localeCompare(b.metadata.name),
+        );
+    } catch (e) {
+        window.chiya.message.error((e as Error).toString());
+    }
+};
+onMounted(storeListLoad);
 </script>

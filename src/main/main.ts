@@ -75,10 +75,10 @@ setTimeout(async () => {
         const timeout = store.config.updateInterval * 60000;
         store.nextUpdateTime = new Date(Date.now() + timeout);
         let updateMessage = false;
-        await new Promise(resolve => {
+        await new Promise<void>(resolve => {
             store.nextUpdateRightNowTrigger = () => {
                 updateMessage = true;
-                resolve(null);
+                resolve();
             };
             setTimeout(resolve, timeout);
         });

@@ -119,7 +119,7 @@ pnpm exec biome check --write
 
 ### TODO
 
-* [ ] 显示和添加官方源的界面
+* [x] 显示和添加官方源的界面
 * [x] Linux 版
 * [ ] ~~macOS 版~~
     * 虽然整个技术栈都是跨平台的，但是我没有 macOS 设备，对 macOS 也不熟，所以没办法编写和测试
