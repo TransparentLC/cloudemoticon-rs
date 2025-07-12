@@ -74,7 +74,7 @@
             添加本地源
         </n-button>
     </n-flex>
-    <n-list bordered show-divider style="margin-bottom:1em">
+    <n-list bordered show-divider>
         <n-list-item v-if="!store.sources.length">
             <n-result
                 title="这里空空的"

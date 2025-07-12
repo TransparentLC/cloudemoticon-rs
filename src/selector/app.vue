@@ -73,7 +73,7 @@
                             <n-button
                                 quaternary circle size="tiny"
                                 :disabled="!emoticon.size"
-                                @click="emoticonPageIndex = emoticonPageIndex === 0 ? (currentEmoticonPageLimit - 1) : (emoticonPageIndex - 1)"
+                                @click="(emoticonPageIndex > 0) && emoticonPageIndex--"
                             >
                                 <template #icon><n-mdi :icon="mdiChevronLeft"></n-mdi></template>
                             </n-button>
@@ -81,7 +81,7 @@
                             <n-button
                                 quaternary circle size="tiny"
                                 :disabled="!emoticon.size"
-                                @click="emoticonPageIndex = (emoticonPageIndex + 1) % currentEmoticonPageLimit"
+                                @click="(emoticonPageIndex < currentEmoticonPageLimit - 1) && emoticonPageIndex++"
                             >
                                 <template #icon><n-mdi :icon="mdiChevronRight"></n-mdi></template>
                             </n-button>
@@ -248,13 +248,10 @@ onMounted(() =>
                 (emoticonCategoryIndex.value + 1) %
                 currentEmoticonRepository.value.repository.categories.length;
         } else if (e.key === '-') {
-            emoticonPageIndex.value =
-                emoticonPageIndex.value === 0
-                    ? currentEmoticonPageLimit.value - 1
-                    : emoticonPageIndex.value - 1;
+            if (emoticonPageIndex.value > 0) emoticonPageIndex.value--;
         } else if (e.key === '=') {
-            emoticonPageIndex.value =
-                (emoticonPageIndex.value + 1) % currentEmoticonPageLimit.value;
+            if (emoticonPageIndex.value < currentEmoticonPageLimit.value - 1)
+                emoticonPageIndex.value++;
         } else {
             for (let i = 0; i < 10; i++) {
                 const key = '1234567890'[i];
