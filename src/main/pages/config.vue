@@ -369,7 +369,10 @@ const storeListLoad = async () => {
         for await (const [source, metadata] of asyncPool(
             4,
             repoContents,
-            (repoContent: { name: string; download_url: string }) =>
+            (repoContent: {
+                name: string;
+                download_url: string;
+            }): Promise<[string, EmoticonMetadata]> =>
                 wretch(repoContent.download_url)
                     .get()
                     .json<EmoticonMetadata>()
