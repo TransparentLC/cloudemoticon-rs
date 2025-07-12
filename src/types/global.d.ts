@@ -21,7 +21,7 @@ interface Window {
 
 // https://github.com/cloud-emoticon/store-repos/blob/master/linter/src/api/RepositoryMetadata.ts
 type EmoticonMetadata = {
-    $schema?: 'https://github.com/cloud-emoticon/store-repos/raw/master/schema/JsonRepository.json';
+    $schema?: 'https://github.com/cloud-emoticon/store-repos/raw/master/schema/RepositoryMetadata.json';
     name: string;
     location:
         | {
@@ -40,7 +40,7 @@ type EmoticonMetadata = {
 };
 // https://github.com/cloud-emoticon/store-repos/blob/master/linter/src/api/JsonRepository.ts
 type EmoticonRepository = {
-    $schema?: 'https://github.com/cloud-emoticon/store-repos/raw/master/schema/RepositoryMetadata.json';
+    $schema?: 'https://github.com/cloud-emoticon/store-repos/raw/master/schema/JsonRepository.json';
     information: string[];
     categories: {
         name: string;
@@ -62,4 +62,5 @@ type CloudEmoticonConfig = {
     mode: 'auto-input' | 'copy-paste';
     shortcut: string;
     updateInterval: number;
+    storeRepository: string;
 };

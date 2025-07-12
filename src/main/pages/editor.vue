@@ -282,7 +282,7 @@ const chiya = window.chiya;
 
 const emptyEmoticonMetadata: EmoticonMetadata = {
     $schema:
-        'https://github.com/cloud-emoticon/store-repos/raw/master/schema/JsonRepository.json',
+        'https://github.com/cloud-emoticon/store-repos/raw/master/schema/RepositoryMetadata.json',
     name: '',
     location: { type: 'localJson' },
     description: '',
@@ -294,7 +294,7 @@ const emptyEmoticonMetadata: EmoticonMetadata = {
 };
 const emptyEmoticonRepository: EmoticonRepository = {
     $schema:
-        'https://github.com/cloud-emoticon/store-repos/raw/master/schema/RepositoryMetadata.json',
+        'https://github.com/cloud-emoticon/store-repos/raw/master/schema/JsonRepository.json',
     information: [],
     categories: [],
 };
