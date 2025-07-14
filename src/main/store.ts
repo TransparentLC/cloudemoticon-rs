@@ -8,6 +8,7 @@ const store = reactive({
         shortcut: 'Ctrl+Shift+E',
         updateInterval: 480,
         storeRepository: 'cloud-emoticon/store-repos',
+        githubToken: '',
     } as CloudEmoticonConfig,
     sources: [] as string[],
     emoticon: new Map<string, Emoticon>(),

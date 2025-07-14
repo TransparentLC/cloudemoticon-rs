@@ -63,4 +63,5 @@ type CloudEmoticonConfig = {
     shortcut: string;
     updateInterval: number;
     storeRepository: string;
+    githubToken: string;
 };

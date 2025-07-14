@@ -122,6 +122,7 @@ const config = reactive<CloudEmoticonConfig>({
     shortcut: 'Ctrl+Shift+E',
     updateInterval: 480,
     storeRepository: 'cloud-emoticon/store-repos',
+    githubToken: '',
 });
 
 const osTheme = useOsTheme();

@@ -58,6 +58,34 @@
                 ></n-input-number>
             </template>
         </n-list-item>
+        <n-list-item>
+            <n-text tag="div">GitHub API 令牌</n-text>
+            <n-text depth="3" tag="small">点击<n-a href="#/config" @click="chiya.dialog.info({
+                title: 'GitHub API 令牌',
+                content: () => [
+                    h(NP, () => '云颜文字需要使用 GitHub API 进行更新检测以及获取源商店的内容。'),
+                    h(NP, () => '这些功能不需要 API 令牌也能正常使用。但是 GitHub API 对匿名用户有每个 IP 地址每小时 60 次的请求次数限制，很容易超过。如果使用 API 令牌的话可以将这个限制增加到每个用户每小时 5000 次。'),
+                    h(NP, () => [
+                        '如果你有 GitHub 账号的话，可以点击',
+                        h(NA, {
+                            href: '#/config',
+                            onClick: () => openUrl('https://github.com/settings/personal-access-tokens/new'),
+                        }, () => '这里'),
+                        '创建一个 API 令牌。权限选择“Public repositories”即可，无需授予其他权限。',
+                    ]),
+                    h(NP, () => '这个 API 令牌不会被泄露给第三方。'),
+                ],
+            })">这里</n-a>查看说明</n-text>
+            <template #suffix>
+                <n-input
+                    type="password"
+                    show-password-on="click"
+                    placeholder="可选"
+                    v-model:value="store.config.githubToken"
+                    style="width:10em"
+                ></n-input>
+            </template>
+        </n-list-item>
     </n-list>
     <n-flex align="center" style="margin-bottom:.5em">
         <n-el tag="strong" style="color:var(--primary-color);flex-grow:1">订阅源</n-el>
@@ -226,9 +254,10 @@ import { join } from '@tauri-apps/api/path';
 import { writeText } from '@tauri-apps/plugin-clipboard-manager';
 import { open } from '@tauri-apps/plugin-dialog';
 import { remove, writeTextFile } from '@tauri-apps/plugin-fs';
-import { NInput } from 'naive-ui';
+import { openUrl } from '@tauri-apps/plugin-opener';
+import { NA, NInput, NP } from 'naive-ui';
 import asyncPool from 'tiny-async-pool';
-import { onMounted, ref } from 'vue';
+import { h, onMounted, ref } from 'vue';
 import wretch from 'wretch';
 import NMdi from '../../components/mdi.vue';
 import { cacheEmoticon, fetchEmoticon, getCacheKey } from '../emoticon';
@@ -365,6 +394,11 @@ const storeListLoad = async () => {
         const repoContents = await wretch(
             `https://api.github.com/repos/${store.config.storeRepository}/contents/`,
         )
+            .headers(
+                store.config.githubToken
+                    ? { Authorization: `Bearer ${store.config.githubToken}` }
+                    : {},
+            )
             .get()
             .json<
                 { name: string; download_url: string; type: 'file' | 'dir' }[]

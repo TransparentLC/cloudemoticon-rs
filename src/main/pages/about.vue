@@ -73,6 +73,7 @@ import { onMounted, ref } from 'vue';
 import wretch from 'wretch';
 import icon from '../../assets/icon.svg';
 import NMdi from '../../components/mdi.vue';
+import store from '../store';
 
 const version = ref('');
 const latestVersion = ref('');
@@ -80,6 +81,11 @@ const checkUpdate = (withMessage: boolean = true) =>
     wretch(
         'https://api.github.com/repos/TransparentLC/cloudemoticon-rs/releases',
     )
+        .headers(
+            store.config.githubToken
+                ? { Authorization: `Bearer ${store.config.githubToken}` }
+                : {},
+        )
         .get()
         .json<{ tag_name: string }[]>()
         .then(r => {
