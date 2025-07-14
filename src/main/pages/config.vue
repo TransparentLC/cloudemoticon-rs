@@ -150,7 +150,14 @@
         </n-button>
     </n-flex>
     <n-list bordered show-divider>
-        <n-list-item v-if="storeListTotal === null">
+        <n-list-item v-if="storeListError">
+            <n-result
+                status="error"
+                title="加载失败"
+                :description="storeListError.toString()"
+            ></n-result>
+        </n-list-item>
+        <n-list-item v-else-if="storeListTotal === null">
             <n-spin style="width:100%;margin:1em 0">
                 <template #description>加载中</template>
             </n-spin>
@@ -342,10 +349,12 @@ const deleteSource = async (sourceIndex: number) => {
 
 const storeListLoaded = ref(0);
 const storeListTotal = ref<number | null>(null);
+const storeListError = ref<Error | null>(null);
 const storeList = ref<{ source: string; metadata: EmoticonMetadata }[]>([]);
 const storeListLoad = async () => {
     storeListLoaded.value = 0;
     storeList.value.length = 0;
+    storeListError.value = null;
     if (!store.config.storeRepository) {
         storeListTotal.value = 0;
         return;
@@ -385,6 +394,7 @@ const storeListLoad = async () => {
             a.metadata.name.localeCompare(b.metadata.name),
         );
     } catch (e) {
+        storeListError.value = e as Error;
         window.chiya.message.error((e as Error).toString());
     }
 };
