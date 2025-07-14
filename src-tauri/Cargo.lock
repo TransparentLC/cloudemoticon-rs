@@ -547,6 +547,7 @@ name = "cloudemoticon-rs"
 version = "0.1.3"
 dependencies = [
  "enigo",
+ "notify-rust",
  "serde",
  "serde_json",
  "tauri",
@@ -556,7 +557,6 @@ dependencies = [
  "tauri-plugin-fs",
  "tauri-plugin-global-shortcut",
  "tauri-plugin-http",
- "tauri-plugin-notification",
  "tauri-plugin-opener",
  "tauri-plugin-single-instance",
 ]
@@ -4315,25 +4315,6 @@ dependencies = [
  "tokio",
  "url",
  "urlpattern",
-]
-
-[[package]]
-name = "tauri-plugin-notification"
-version = "2.3.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cfe06ed89cff6d0ec06ff4f544fb961e4718348a33309f56ccb2086e77bc9116"
-dependencies = [
- "log",
- "notify-rust",
- "rand 0.8.5",
- "serde",
- "serde_json",
- "serde_repr",
- "tauri",
- "tauri-plugin",
- "thiserror 2.0.12",
- "time",
- "url",
 ]
 
 [[package]]

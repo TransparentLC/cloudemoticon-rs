@@ -43,9 +43,10 @@ fn show_selector(app: tauri::AppHandle) {
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_single_instance::init(|app, _args, _cwd| {
-            app.get_webview_window("main").unwrap().show().unwrap();
+            let window = app.get_webview_window("main").unwrap();
+            window.show().unwrap();
+            window.set_focus().unwrap();
         }))
-        .plugin(tauri_plugin_notification::init())
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_http::init())
@@ -71,13 +72,13 @@ pub fn run() {
                 })
                 .build(app)?;
 
-            use tauri_plugin_notification::NotificationExt;
-            app.notification()
-                .builder()
-                .title("云颜文字")
-                .body("云颜文字已在运行，可以通过托盘图标打开主界面～(*'ω'*)")
-                .show()
-                .unwrap();
+            tauri::async_runtime::spawn(async move {
+                let mut notification = notify_rust::Notification::new();
+                notification.summary("云颜文字");
+                notification.body("云颜文字已在运行，可以通过托盘图标打开主界面～(*'ω'*)");
+                notification.auto_icon();
+                notification.show().unwrap();
+            });
 
             Ok(())
         })
