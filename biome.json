@@ -19,6 +19,8 @@
             "**/*.json",
             "**/*.jsonc",
             "**/*.vue",
+            "!auto-imports.d.ts",
+            "!components.d.ts",
             "!src-tauri/**",
             "src-tauri/*.json",
             "src-tauri/capabilities/**/*.json"
