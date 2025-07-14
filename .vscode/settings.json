@@ -10,6 +10,6 @@
     "[vue]": {
         "editor.codeActionsOnSave": {
             "source.fixAll.biome": "never"
-        },
+        }
     }
 }
