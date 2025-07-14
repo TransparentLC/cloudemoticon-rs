@@ -84,10 +84,22 @@ https://github.com/user-attachments/assets/99f0873d-a371-49d6-92a7-976340f44b9b
 
 *Stable Rust 应该也能编译，但是我用了一些 Nightly Rust 才能使用的编译优化……*
 
-安装前端依赖（也可以使用其他的包管理器，不过我这里使用 [pnpm](https://pnpm.io/)）：
+本项目还使用了以下工具：
+
+* 使用 [Biome](https://biomejs.dev/) 对前端代码进行格式化和 lint
+* 使用 [commitlint](https://commitlint.js.org/) 保证 commit message 符合 [Conventional Commits](https://www.conventionalcommits.org/zh-hans/v1.0.0/) 规范
+* 使用 [Lefthook](https://lefthook.dev/) 管理 Git Hooks
+
+安装前端依赖（这里使用 [pnpm](https://pnpm.io/) 作为包管理器）：
 
 ```sh
 pnpm install
+```
+
+配置一下 Git Hooks：
+
+```sh
+pnpm exec lefthook install
 ```
 
 开发：
@@ -109,12 +121,6 @@ pnpm tauri-release
 upx --ultra-brute src-tauri/target/release/cloudemoticon-rs.exe
 # Linux
 upx --ultra-brute src-tauri/target/release/cloudemoticon-rs
-```
-
-前端代码使用 [Biome](https://biomejs.dev/) 进行格式化和 lint，在提交代码前记得检查一下：
-
-```sh
-pnpm exec biome check --write
 ```
 
 ### TODO

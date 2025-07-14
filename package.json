@@ -31,9 +31,12 @@
     },
     "devDependencies": {
         "@biomejs/biome": "^2.1.1",
+        "@commitlint/cli": "^19.8.1",
+        "@commitlint/config-conventional": "^19.8.1",
         "@tauri-apps/cli": "^2.6.2",
         "@types/tiny-async-pool": "^2.0.3",
         "@vitejs/plugin-vue": "^6.0.0",
+        "lefthook": "^1.12.2",
         "typescript": "^5.8.3",
         "unplugin-auto-import": "^19.3.0",
         "unplugin-vue-components": "^28.8.0",
