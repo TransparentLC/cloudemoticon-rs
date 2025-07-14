@@ -10,11 +10,7 @@
 
 除了颜文字，你当然也可以用它来输入一些别的东西。
 
-<picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://p.sda1.dev/25/d8655a3412ec3e3307f0cdfea2d17c50/edaO.webp">
-    <source media="(prefers-color-scheme: light)" srcset="https://p.sda1.dev/25/f71030d4d82c8f7d81e8e2f5f2b182e0/c_A0.webp">
-    <img src="https://p.sda1.dev/25/f71030d4d82c8f7d81e8e2f5f2b182e0/c_A0.webp">
-</picture>
+![](https://p.sda1.dev/25/99775aa7395f5dde287217ec1ac73cc3/S85O.webp)
 
 > [!NOTE]
 >
