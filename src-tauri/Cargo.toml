@@ -30,7 +30,12 @@ opt-level = "s"
 panic = "abort"
 strip = true
 trim-paths = "all"
-rustflags = ["-Cdebuginfo=0", "-Zthreads=8"]
+rustflags = [
+    "-Cdebuginfo=0",
+    "-Zthreads=8",
+    "-Zlocation-detail=none",
+    "-Zfmt-debug=none",
+]
 
 [build-dependencies]
 tauri-build = { version = "2", features = [] }

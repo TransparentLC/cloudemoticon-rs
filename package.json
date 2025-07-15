@@ -9,7 +9,7 @@
         "preview": "vite preview",
         "tauri": "tauri",
         "tauri-dev": "tauri dev",
-        "tauri-release": "tauri build --no-bundle -- -Z build-std=std,panic_abort -Z build-std-features=panic_immediate_abort"
+        "tauri-release": "tauri build --no-bundle -- -Z build-std=std,panic_abort -Z build-std-features=optimize_for_size,panic_immediate_abort"
     },
     "dependencies": {
         "@mdi/js": "*",
