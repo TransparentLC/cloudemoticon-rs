@@ -15,12 +15,7 @@ export default defineConfig(async () => ({
             imports: [
                 'vue',
                 {
-                    'naive-ui': [
-                        'useDialog',
-                        'useMessage',
-                        'useNotification',
-                        'useLoadingBar',
-                    ],
+                    'naive-ui': ['useDialog', 'useMessage'],
                 },
             ],
         }),

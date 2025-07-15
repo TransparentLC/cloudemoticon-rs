@@ -100,10 +100,7 @@ const configProviderPropsRef = computed<ConfigProviderProps>(() => ({
 }));
 
 // @ts-expect-error 稍后添加额外的dialog相关方法
-window.chiya = createDiscreteApi(['message', 'dialog', 'notification'], {
-    notificationProviderProps: {
-        placement: 'bottom-right',
-    },
+window.chiya = createDiscreteApi(['message', 'dialog'], {
     configProviderProps: configProviderPropsRef,
 });
 window.chiya.dialog.alert = options =>

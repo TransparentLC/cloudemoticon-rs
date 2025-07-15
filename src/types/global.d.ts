@@ -15,7 +15,6 @@ interface Window {
                 },
             ) => Promise<string | null>;
         };
-        notification: import('naive-ui').NotificationProviderInst;
     };
 }
 
