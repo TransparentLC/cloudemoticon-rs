@@ -10,6 +10,7 @@ on:
 jobs:
   build:
     strategy:
+      fail-fast: false
       matrix:
         os:
           - windows-latest
@@ -91,3 +92,5 @@ jobs:
         with:
           name: cloudemoticon-rs-${{ steps.rust-host.outputs.rust_host }}
           path: ${{ steps.build.outputs.executable }}
+          if-no-files-found: error
+          compression-level: 9
