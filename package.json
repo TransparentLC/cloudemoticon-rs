@@ -36,6 +36,7 @@
         "@types/tiny-async-pool": "^2.0.3",
         "@vitejs/plugin-vue": "^6.0.0",
         "lefthook": "^1.12.2",
+        "rollup-plugin-visualizer": "^6.0.3",
         "typescript": "^5.8.3",
         "unplugin-auto-import": "^19.3.0",
         "unplugin-vue-components": "^28.8.0",

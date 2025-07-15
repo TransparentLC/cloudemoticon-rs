@@ -1,10 +1,10 @@
 import vue from '@vitejs/plugin-vue';
+import { visualizer } from 'rollup-plugin-visualizer';
 import AutoImport from 'unplugin-auto-import/vite';
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers';
 import Components from 'unplugin-vue-components/vite';
 import { defineConfig } from 'vite';
 
-// @ts-expect-error process is a nodejs global
 const host = process.env.TAURI_DEV_HOST;
 
 // https://vitejs.dev/config/
@@ -34,6 +34,11 @@ export default defineConfig(async () => ({
                 main: './main.html',
                 selector: './selector.html',
             },
+            plugins: [
+                visualizer({
+                    brotliSize: true,
+                }),
+            ],
         },
     },
     // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
