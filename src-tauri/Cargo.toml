@@ -34,7 +34,12 @@ rustflags = [
     "-Cdebuginfo=0",
     "-Zthreads=8",
     "-Zlocation-detail=none",
-    "-Zfmt-debug=none",
+    # FIXME:
+    # min-sized-rust 推荐添加 -Zfmt-debug=none
+    # 但是在 Linux 下编译到 target-lexicon 会报一堆 expected identifier 的错误，不知道怎么回事
+    # 根据 https://doc.rust-lang.org/nightly/nightly-rustc/rustc_session/config/enum.FmtDebug.html
+    # 改成 shallow 还是能减少一点二进制大小的
+    "-Zfmt-debug=shallow",
 ]
 
 [build-dependencies]
