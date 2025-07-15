@@ -1,10 +1,13 @@
 # cloudemoticon-rs
 
+[![build](https://github.com/TransparentLC/cloudemoticon-rs/actions/workflows/build.yml/badge.svg)](https://github.com/TransparentLC/cloudemoticon-rs/actions/workflows/build.yml)
+[![download](https://img.shields.io/github/downloads/TransparentLC/cloudemoticon-rs/total.svg)](https://github.com/TransparentLC/cloudemoticon-rs/releases)
+
 [“云颜文字”](https://emoticon.moe/)非官方桌面客户端。
 
 本项目也是我自己在 2018 年左右编写的旧版[相同项目](https://github.com/TransparentLC/CloudEmoticon)的重制版。
 
-本项目使用 Rust+Tauri+Vue 编写，与官方桌面客户端相比，体积更小（只有 2 MB 左右！），界面更美观，同时仍然保留了旧版的快速输入的特色功能～
+本项目使用 Rust+Tauri+Vue 编写，与官方桌面客户端相比，体积更小（小于 2 MB！），界面更美观，同时仍然保留了旧版的快速输入的特色功能～
 
 *官方客户端使用 Electron 编写，只能复制颜文字，需要手动粘贴才能完成输入。*
 
