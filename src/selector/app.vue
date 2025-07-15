@@ -55,7 +55,11 @@
                         >
                             <n-text
                                 tag="div"
-                                style="white-space:nowrap;text-overflow:ellipsis;overflow:hidden"
+                                :style="{
+                                    whiteSpace: (currentEmoticonPage[i - 1] ? currentEmoticonPage[i - 1].emoticon : '').includes('\n') ? 'nowrap' : 'pre',
+                                    textOverflow: 'ellipsis',
+                                    overflow: 'hidden',
+                                }"
                             >{{ currentEmoticonPage[i - 1] ? currentEmoticonPage[i - 1].emoticon : '' }}</n-text>
                             <template #suffix>
                                 <n-kbd

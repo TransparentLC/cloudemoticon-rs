@@ -83,7 +83,11 @@
         >
             <n-text
                 tag="div"
-                style="white-space:nowrap;text-overflow:ellipsis;overflow:hidden"
+                :style="{
+                    whiteSpace: t.emoticon.includes('\n') ? 'nowrap' : 'pre',
+                    textOverflow: 'ellipsis',
+                    overflow: 'hidden',
+                }"
             >{{ t.emoticon }}</n-text>
             <n-text depth="3" tag="small">{{ t.description }}</n-text>
             <template #suffix>

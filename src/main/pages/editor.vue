@@ -181,7 +181,11 @@
                             >
                                 <n-text
                                     tag="div"
-                                    style="white-space:nowrap;text-overflow:ellipsis;overflow:hidden"
+                                    :style="{
+                                        whiteSpace: (t.emoticon || '').includes('\n') ? 'nowrap' : 'pre',
+                                        textOverflow: 'ellipsis',
+                                        overflow: 'hidden',
+                                    }"
                                     :depth="t.emoticon ? undefined : 3"
                                     :italic="!t.emoticon"
                                 >{{ t.emoticon || '（空的颜文字）' }}</n-text>
