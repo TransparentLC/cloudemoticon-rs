@@ -84,6 +84,7 @@ jobs:
           elif [ $RUNNER_OS == "macOS" ]; then
             echo "TODO"
           fi
+          echo "version=$(cat package.json | jq -r .version)" >> $GITHUB_OUTPUT
           echo "deb_package=src-tauri/target/release/cloudemoticon-rs_$(cat package.json | jq -r .version)_amd64.deb" >> $GITHUB_OUTPUT
       - name: Apply UPX compression
         shell: bash
@@ -155,6 +156,7 @@ jobs:
         if: runner.os == 'Linux'
         uses: actions/upload-artifact@v4
         with:
+          name: cloudemoticon-rs_${{ steps.build.outputs.version }}_amd64_deb
           path: ${{ steps.build.outputs.deb_package }}
           if-no-files-found: error
           compression-level: 9
