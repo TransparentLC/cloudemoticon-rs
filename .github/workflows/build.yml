@@ -68,7 +68,8 @@ jobs:
               libssl-dev \
               libayatana-appindicator3-dev \
               librsvg2-dev \
-              upx-ucl
+              upx-ucl \
+              makepkg
           elif [ $RUNNER_OS == "macOS" ]; then
             echo "TODO"
           fi
@@ -84,13 +85,110 @@ jobs:
           elif [ $RUNNER_OS == "macOS" ]; then
             echo "TODO"
           fi
+          echo "deb_package=src-tauri/target/release/cloudemoticon-rs_$(cat package.json | jq -r .version)_amd64.deb" >> $GITHUB_OUTPUT
+          echo "arch_package=src-tauri/target/release/cloudemoticon-rs-$(cat package.json | jq -r .version)-1-x86_64.pkg.tar.zst" >> $GITHUB_OUTPUT
       - name: Apply UPX compression
         shell: bash
         run: upx --ultra-brute ${{ steps.build.outputs.executable }}
+      - name: Build deb and arch package
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          VERSION=$(cat package.json | jq -r .version)
+          D=$(pwd)
+          T=$(mktemp -d)
+
+          # Build deb package
+
+          mkdir -p "${T}/control"
+          mkdir -p "${T}/data/usr/bin"
+          mkdir -p "${T}/data/usr/share/applications"
+          mkdir -p "${T}/data/usr/share/icons/hicolor/scalable/apps"
+
+          echo "2.0" > "${T}/debian-binary"
+          cp src-tauri/target/release/cloudemoticon-rs "${T}/data/usr/bin/cloudemoticon-rs"
+          cp src/assets/icon.svg "${T}/data/usr/share/icons/hicolor/scalable/apps/cloudemoticon-rs.svg"
+          cat << EOF > "${T}/data/usr/share/applications/cloudemoticon-rs.desktop"
+          [Desktop Entry]
+          Type=Application
+          Version=${VERSION}
+          Name=云颜文字
+          Comment=在云中找到你所爱的颜文字
+          Exec=cloudemoticon-rs
+          StartupWMClass=cloudemoticon-rs
+          Icon=cloudemoticon-rs
+          Categories=Utility
+          Terminal=false
+          EOF
+          cat << EOF > "${T}/control/control"
+          Package: cloudemoticon-rs
+          Version: ${VERSION}
+          Architecture: amd64
+          Installed-Size: $(du -ks "${T}/data/usr" | cut -f 1)
+          Maintainer: TransparentLC <me@akarin.dev>
+          Priority: optional
+          Depends: libappindicator3-1, libwebkit2gtk-4.1-0, libgtk-3-0
+          Description: A cloud solution to your favorite emoticons.
+          EOF
+          cd "${T}/data"
+          md5sum \
+            usr/bin/cloudemoticon-rs \
+            usr/share/icons/hicolor/scalable/apps/cloudemoticon-rs.svg \
+            usr/share/applications/cloudemoticon-rs.desktop \
+          > "${T}/control/md5sums"
+          cd ../control
+          fakeroot tar -Jcvf ../control.tar.xz *
+          cd ../data
+          fakeroot tar -Jcvf ../data.tar.xz *
+          cd ..
+          rm -rf control
+          rm -rf data
+
+          ar -r "cloudemoticon-rs_${VERSION}_amd64.deb" debian-binary control.tar.xz data.tar.xz
+          mv "cloudemoticon-rs_${VERSION}_amd64.deb" "${D}/src-tauri/target/release/cloudemoticon-rs_${VERSION}_amd64.deb"
+          cd $D
+          rm -rf $T
+
+          # Build arch package from deb
+
+          cd src-tauri/target/release
+          cat << EOF > PKGBUILD
+          # Maintainer: TransparentLC <me@akarin.dev>
+          pkgname=cloudemoticon-rs
+          pkgver=${VERSION}
+          pkgrel=1
+          pkgdesc="A cloud solution to your favorite emoticons."
+          arch=('x86_64')
+          url="https://github.com/TransparentLC/cloudemoticon-rs"
+          license=('AGPL-3.0-or-later')
+          depends=('cairo' 'desktop-file-utils' 'gdk-pixbuf2' 'glib2' 'gtk3' 'hicolor-icon-theme' 'libsoup' 'pango' 'webkit2gtk')
+          options=('!strip' '!emptydirs')
+          source_x86_64=('\${pkgname}_\${pkgver}_amd64.deb::https://github.com/TransparentLC/cloudemoticon-rs/releases/download/v\${pkgver}/\${pkgname}_\${pkgver}_amd64.deb')
+          sha256sums_x86_64=('$(sha256sum "cloudemoticon-rs_${VERSION}_amd64.deb" | cut -d " " -f 1)')
+
+          package() {
+            tar -xf data.tar.xz -C "\${pkgdir}"
+          }
+          EOF
+          makepkg
       - name: Upload result
         uses: actions/upload-artifact@v4
         with:
           name: cloudemoticon-rs-${{ steps.rust-host.outputs.rust_host }}
           path: ${{ steps.build.outputs.executable }}
+          if-no-files-found: error
+          compression-level: 9
+      - name: Upload deb package
+        if: runner.os == 'Linux'
+        uses: actions/upload-artifact@v4
+        with:
+          path: ${{ steps.build.outputs.deb_package }}
+          if-no-files-found: error
+          compression-level: 9
+      - name: Upload arch package
+        if: runner.os == 'Linux'
+        uses: actions/upload-artifact@v4
+        with:
+          path: ${{ steps.build.outputs.arch_package }}
           if-no-files-found: error
           compression-level: 9
