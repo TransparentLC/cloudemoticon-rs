@@ -68,8 +68,7 @@ jobs:
               libssl-dev \
               libayatana-appindicator3-dev \
               librsvg2-dev \
-              upx-ucl \
-              makepkg
+              upx-ucl
           elif [ $RUNNER_OS == "macOS" ]; then
             echo "TODO"
           fi
