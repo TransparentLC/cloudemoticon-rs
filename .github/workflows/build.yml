@@ -86,19 +86,16 @@ jobs:
             echo "TODO"
           fi
           echo "deb_package=src-tauri/target/release/cloudemoticon-rs_$(cat package.json | jq -r .version)_amd64.deb" >> $GITHUB_OUTPUT
-          echo "arch_package=src-tauri/target/release/cloudemoticon-rs-$(cat package.json | jq -r .version)-1-x86_64.pkg.tar.zst" >> $GITHUB_OUTPUT
       - name: Apply UPX compression
         shell: bash
         run: upx --ultra-brute ${{ steps.build.outputs.executable }}
-      - name: Build deb and arch package
+      - name: Build deb package
         if: runner.os == 'Linux'
         shell: bash
         run: |
           VERSION=$(cat package.json | jq -r .version)
           D=$(pwd)
           T=$(mktemp -d)
-
-          # Build deb package
 
           mkdir -p "${T}/control"
           mkdir -p "${T}/data/usr/bin"
@@ -148,29 +145,6 @@ jobs:
           mv "cloudemoticon-rs_${VERSION}_amd64.deb" "${D}/src-tauri/target/release/cloudemoticon-rs_${VERSION}_amd64.deb"
           cd $D
           rm -rf $T
-
-          # Build arch package from deb
-
-          cd src-tauri/target/release
-          cat << EOF > PKGBUILD
-          # Maintainer: TransparentLC <me@akarin.dev>
-          pkgname=cloudemoticon-rs
-          pkgver=${VERSION}
-          pkgrel=1
-          pkgdesc="A cloud solution to your favorite emoticons."
-          arch=('x86_64')
-          url="https://github.com/TransparentLC/cloudemoticon-rs"
-          license=('AGPL-3.0-or-later')
-          depends=('cairo' 'desktop-file-utils' 'gdk-pixbuf2' 'glib2' 'gtk3' 'hicolor-icon-theme' 'libsoup' 'pango' 'webkit2gtk')
-          options=('!strip' '!emptydirs')
-          source_x86_64=('\${pkgname}_\${pkgver}_amd64.deb::https://github.com/TransparentLC/cloudemoticon-rs/releases/download/v\${pkgver}/\${pkgname}_\${pkgver}_amd64.deb')
-          sha256sums_x86_64=('$(sha256sum "cloudemoticon-rs_${VERSION}_amd64.deb" | cut -d " " -f 1)')
-
-          package() {
-            tar -xf data.tar.xz -C "\${pkgdir}"
-          }
-          EOF
-          makepkg
       - name: Upload result
         uses: actions/upload-artifact@v4
         with:
@@ -183,12 +157,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           path: ${{ steps.build.outputs.deb_package }}
-          if-no-files-found: error
-          compression-level: 9
-      - name: Upload arch package
-        if: runner.os == 'Linux'
-        uses: actions/upload-artifact@v4
-        with:
-          path: ${{ steps.build.outputs.arch_package }}
           if-no-files-found: error
           compression-level: 9
