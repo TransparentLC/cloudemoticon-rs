@@ -77,7 +77,7 @@ pub fn run() {
                 notification.summary("云颜文字");
                 notification.body("云颜文字已在运行，可以通过托盘图标打开主界面～(*'ω'*)");
                 notification.auto_icon();
-                notification.show().unwrap();
+                _ = notification.show();
             });
 
             Ok(())
