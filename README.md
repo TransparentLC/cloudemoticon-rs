@@ -2,6 +2,7 @@
 
 [![build](https://github.com/TransparentLC/cloudemoticon-rs/actions/workflows/build.yml/badge.svg)](https://github.com/TransparentLC/cloudemoticon-rs/actions/workflows/build.yml)
 [![download](https://img.shields.io/github/downloads/TransparentLC/cloudemoticon-rs/total.svg)](https://github.com/TransparentLC/cloudemoticon-rs/releases)
+[![AUR Version](https://img.shields.io/aur/version/cloudemoticon-rs?logo=archlinux&labelColor=%23333&color=%2308c)](https://aur.archlinux.org/packages/cloudemoticon-rs)
 
 [“云颜文字”](https://emoticon.moe/)非官方桌面客户端。
 
@@ -14,6 +15,16 @@
 除了颜文字，你当然也可以用它来输入一些别的东西。
 
 ![](https://p.sda1.dev/25/99775aa7395f5dde287217ec1ac73cc3/S85O.webp)
+
+## 快速安装
+
+* [Release](https://github.com/TransparentLC/cloudemoticon-rs/releases) 中有使用 GitHub Actions 自动打包的可执行文件：
+  * ![Windows 11+](https://img.shields.io/badge/Windows-11+-06b?logo=windows) `cloudemoticon-rs-x86_64-pc-windows-msvc.zip`
+  * ![Linux with glibc >= 2.39](https://img.shields.io/badge/Linux-glibc%20%3E=%202.39-fc0?logo=linux) `cloudemoticon-rs-x86_64-unknown-linux-gnu.zip`（各大发行版的 glibc 版本可以参考 [glibc package versions - Repology](https://repology.org/project/glibc/versions)）
+* 也可以通过软件包安装：
+  * ![Ubuntu 24.04+](https://img.shields.io/badge/Ubuntu-24.04+-e52?logo=ubuntu) 从 release 中下载 deb 包 `cloudemoticon-rs_*.*.*_amd64.deb`，然后使用 `dpkg -i` 安装
+  * ![Arch Linux](https://img.shields.io/badge/Arch%20Linux-333?logo=archlinux) 从 release 中下载 arch 包 `cloudemoticon-rs-*.*.*-*-x86_64.pkg.tar.zst`，然后使用 `pacman -U` 安装
+  * ![Arch Linux (Arch User Repository)](https://img.shields.io/badge/Arch%20Linux%20(Arch%20User%20Repository)-333?logo=archlinux) 使用你喜欢的 AUR helper 安装 [`cloudemoticon-rs`](https://aur.archlinux.org/packages/cloudemoticon-rs)
 
 > [!NOTE]
 >
@@ -81,7 +92,7 @@ https://github.com/user-attachments/assets/99f0873d-a371-49d6-92a7-976340f44b9b
 
 需要安装 **Nightly Rust** 和最新版本的 Node.js。
 
-*Stable Rust 应该也能编译，但是我用了一些 Nightly Rust 才能使用的编译优化……*
+Stable Rust 应该也能编译，但是我用了一些 Nightly Rust 才能使用的编译优化，例如[为了减小二进制大小而使用了 `build-std`](https://github.com/johnthagen/min-sized-rust#optimize-libstd-with-build-std) 等等，因此还需要 `rustup component add rust-src`。
 
 本项目还使用了以下工具：
 
