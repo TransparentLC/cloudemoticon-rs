@@ -70,23 +70,23 @@ import { getVersion } from '@tauri-apps/api/app';
 import { openUrl } from '@tauri-apps/plugin-opener';
 import { compare } from 'compare-versions';
 import { onMounted, ref } from 'vue';
-import wretch from 'wretch';
 import icon from '../../assets/icon.svg';
 import NMdi from '../../components/mdi.vue';
 import store from '../store';
+import wretch from '../wretch';
 
 const version = ref('');
 const latestVersion = ref('');
 const checkUpdate = (withMessage: boolean = true) =>
-    wretch(
-        'https://api.github.com/repos/TransparentLC/cloudemoticon-rs/releases',
-    )
+    wretch
         .headers(
             store.config.githubToken
                 ? { Authorization: `Bearer ${store.config.githubToken}` }
                 : {},
         )
-        .get()
+        .get(
+            'https://api.github.com/repos/TransparentLC/cloudemoticon-rs/releases',
+        )
         .json<{ tag_name: string }[]>()
         .then(r => {
             latestVersion.value = r[0].tag_name.replace(/^v/, '');

@@ -2,9 +2,9 @@ import fnv1a from '@sindresorhus/fnv1a';
 import { emit } from '@tauri-apps/api/event';
 import { join } from '@tauri-apps/api/path';
 import { readTextFile, writeTextFile } from '@tauri-apps/plugin-fs';
-import wretch from 'wretch';
 import { emoticonCacheDir } from './path';
 import store from './store';
+import wretch from './wretch';
 
 const dp = new DOMParser();
 
@@ -61,7 +61,7 @@ export const fetchEmoticon = async (source: string): Promise<Emoticon> => {
     const isLocal = !source.match(/^https?:\/\//);
     const metadata: EmoticonMetadata = isLocal
         ? JSON.parse(await readTextFile(source))
-        : await wretch(source).get().json();
+        : await wretch.get(source).json();
     let repoSource: string;
     switch (metadata.location.type) {
         case 'remoteJson':
@@ -76,7 +76,7 @@ export const fetchEmoticon = async (source: string): Promise<Emoticon> => {
     }
     const repositoryText = !repoSource.match(/^https?:\/\//)
         ? await readTextFile(repoSource)
-        : await wretch(repoSource).get().text();
+        : await wretch.get(repoSource).text();
     const repository: EmoticonRepository = (
         metadata.location.type === 'localXml'
             ? parseXMLEmoticonRepository

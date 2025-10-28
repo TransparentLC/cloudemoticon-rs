@@ -258,11 +258,11 @@ import { openUrl } from '@tauri-apps/plugin-opener';
 import { NA, NInput, NP } from 'naive-ui';
 import asyncPool from 'tiny-async-pool';
 import { h, onMounted, ref } from 'vue';
-import wretch from 'wretch';
 import NMdi from '../../components/mdi.vue';
 import { cacheEmoticon, fetchEmoticon, getCacheKey } from '../emoticon';
 import { configFile, emoticonCacheDir, sourcesFile } from '../path';
 import store from '../store';
+import wretch from '../wretch';
 
 const chiya = window.chiya;
 
@@ -391,15 +391,15 @@ const storeListLoad = async () => {
         storeListTotal.value = null;
     }
     try {
-        const repoContents = await wretch(
-            `https://api.github.com/repos/${store.config.storeRepository}/contents/`,
-        )
+        const repoContents = await wretch
             .headers(
                 store.config.githubToken
                     ? { Authorization: `Bearer ${store.config.githubToken}` }
                     : {},
             )
-            .get()
+            .get(
+                `https://api.github.com/repos/${store.config.storeRepository}/contents/`,
+            )
             .json<
                 { name: string; download_url: string; type: 'file' | 'dir' }[]
             >()
@@ -416,8 +416,8 @@ const storeListLoad = async () => {
                 name: string;
                 download_url: string;
             }): Promise<[string, EmoticonMetadata]> =>
-                wretch(repoContent.download_url)
-                    .get()
+                wretch
+                    .get(repoContent.download_url)
                     .json<EmoticonMetadata>()
                     .then(metadata => [repoContent.download_url, metadata]),
         )) {

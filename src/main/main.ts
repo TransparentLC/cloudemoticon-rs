@@ -7,16 +7,12 @@ import {
     writeTextFile,
 } from '@tauri-apps/plugin-fs';
 import { register, unregister } from '@tauri-apps/plugin-global-shortcut';
-import { fetch } from '@tauri-apps/plugin-http';
 import { createApp } from 'vue';
-import wretch from 'wretch';
 import app from './app.vue';
 import { updateSources } from './emoticon';
 import { configDir, configFile, emoticonCacheDir, sourcesFile } from './path';
 import router from './router';
 import store from './store';
-
-wretch.polyfills({ fetch });
 
 await Promise.all([
     mkdir(configDir, { recursive: true }),
@@ -41,12 +37,12 @@ const emoticonStoreInited = new Promise<void>(resolve => {
 });
 listen('update-emoticon-emit', async () => {
     await emoticonStoreInited;
-    store.emoticon.forEach((v, k) =>
+    store.emoticon.forEach((v, k) => {
         emit('update-emoticon', {
             key: k,
             value: v,
-        }),
-    );
+        });
+    });
 });
 
 createApp(app).use(router).mount('#app');
