@@ -1,9 +1,15 @@
 use enigo::{Enigo, Key, Keyboard, Settings};
+use std::sync::Mutex;
 use tauri::{
-    Manager,
+    Manager, PhysicalSize,
     menu::{Menu, MenuItem},
     tray::TrayIconBuilder,
 };
+
+#[derive(Default, PartialEq)]
+struct AppState {
+    monitor: (PhysicalSize<u32>, f64),
+}
 
 #[tauri::command]
 fn input_text(app: tauri::AppHandle, mode: &str, text: &str) {
@@ -32,6 +38,21 @@ fn show_selector(app: tauri::AppHandle) {
     if window.is_visible().unwrap() {
         window.hide().unwrap();
     } else {
+        let monitor = window.current_monitor().unwrap().unwrap();
+        let monitor = (*monitor.size(), monitor.scale_factor());
+
+        let state = app.state::<Mutex<AppState>>();
+        let mut state = state.lock().unwrap();
+        if state.monitor != monitor {
+            state.monitor = monitor;
+            let (_, scale_factor) = monitor;
+            window.set_size(PhysicalSize::new(
+                (320f64 * scale_factor) as u32,
+                (720f64 * scale_factor) as u32,
+            ));
+        }
+        drop(state);
+
         window.center().unwrap();
         window.show().unwrap();
         window.unminimize().unwrap();
@@ -71,6 +92,8 @@ pub fn run() {
                     _ => panic!("menu item {:?} not handled", event.id),
                 })
                 .build(app)?;
+
+            app.manage(Mutex::new(AppState::default()));
 
             tauri::async_runtime::spawn(async move {
                 let mut notification = notify_rust::Notification::new();
