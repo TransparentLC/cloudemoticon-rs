@@ -1,4 +1,4 @@
-cargo-features = ["trim-paths", "profile-rustflags"]
+cargo-features = ["trim-paths", "panic-immediate-abort", "profile-rustflags"]
 
 [package]
 name = "cloudemoticon-rs"
@@ -27,7 +27,7 @@ rustflags = ["-Zthreads=8"]
 codegen-units = 1
 lto = true
 opt-level = "s"
-panic = "abort"
+panic = "immediate-abort"
 strip = true
 trim-paths = "all"
 rustflags = [
