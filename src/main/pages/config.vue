@@ -132,12 +132,16 @@
             <n-text
                 depth="3"
                 tag="small"
-                underline
-                style="white-space:nowrap;text-overflow:ellipsis;overflow:hidden;display:block;cursor:pointer"
-                @click="writeText(e).then(() => chiya.message.info('已复制 URL'))"
-            >{{ e }}</n-text>
+                style="white-space:nowrap;text-overflow:ellipsis;overflow:hidden;display:block"
+            >{{ store.emoticon.get(getCacheKey(e))?.metadata.description }}</n-text>
             <template #suffix>
-                <n-flex :wrap="false">
+                <n-flex :wrap="false" size="small">
+                    <n-button
+                        quaternary circle
+                        @click="writeText(e).then(() => chiya.message.info('已复制 URL'))"
+                    >
+                        <template #icon><n-mdi :icon="mdiLinkVariant"></n-mdi></template>
+                    </n-button>
                     <n-button
                         quaternary circle
                         @click="addSource(e)"
@@ -220,12 +224,16 @@
             <n-text
                 depth="3"
                 tag="small"
-                underline
-                style="white-space:nowrap;text-overflow:ellipsis;overflow:hidden;display:block;cursor:pointer"
-                @click="writeText(e.source).then(() => chiya.message.info('已复制 URL'))"
-            >{{ e.source }}</n-text>
+                style="white-space:nowrap;text-overflow:ellipsis;overflow:hidden;display:block"
+            >{{ e.metadata.description }}</n-text>
             <template #suffix>
-                <n-flex :wrap="false">
+                <n-flex :wrap="false" size="small">
+                    <n-button
+                        quaternary circle
+                        @click="writeText(e.source).then(() => chiya.message.info('已复制 URL'))"
+                    >
+                        <template #icon><n-mdi :icon="mdiLinkVariant"></n-mdi></template>
+                    </n-button>
                     <n-button
                         quaternary circle
                         @click="addSource(e.source, true, true)"

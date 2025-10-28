@@ -23,20 +23,6 @@
                 </template>
                 查看作者主页
             </n-tooltip>
-            <n-tooltip trigger="hover">
-                <template #trigger>
-                    <n-button
-                        tertiary circle size="small"
-                        @click="chiya.dialog.create({
-                            title: '详细说明',
-                            content: () => currentEmoticon?.repository.information.map(e => h(NP, () => e)),
-                        })"
-                    >
-                        <template #icon><n-mdi :icon="mdiInformation"></n-mdi></template>
-                    </n-button>
-                </template>
-                详细说明
-            </n-tooltip>
             <n-tooltip v-if="currentEmoticon?.isLocal" trigger="hover">
                 <template #trigger>
                     <n-button
@@ -61,7 +47,7 @@
             </n-tooltip>
             <n-text tag="small" depth="3">{{ currentEmoticon?.repository.categories.length }} 个分组，{{ currentEmoticon?.repository.categories.reduce((a, c) => a += c.entries.length, 0) }} 个颜文字</n-text>
         </n-flex>
-        <n-p>{{ currentEmoticon?.metadata.description }}</n-p>
+        <n-p v-for="e in currentEmoticon?.repository.information">{{ e }}</n-p>
     </div>
     <n-divider style="margin-bottom:0"></n-divider>
     <n-list
@@ -118,7 +104,6 @@
 import {
     mdiAccount,
     mdiFileEyeOutline,
-    mdiInformation,
     mdiLinkVariant,
     mdiMagnify,
 } from '@mdi/js';
