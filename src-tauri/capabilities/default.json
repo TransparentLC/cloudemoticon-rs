@@ -4,6 +4,7 @@
     "description": "Capability for the main window",
     "windows": ["main", "selector"],
     "permissions": [
+        "core:app:allow-identifier",
         "core:app:allow-version",
         "core:window:allow-hide",
         "core:path:allow-join",

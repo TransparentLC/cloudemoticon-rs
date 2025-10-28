@@ -1,4 +1,9 @@
+import { getIdentifier, getVersion } from '@tauri-apps/api/app';
 import { fetch } from '@tauri-apps/plugin-http';
 import wretch from 'wretch';
 
-export default wretch().fetchPolyfill(fetch);
+export default wretch()
+    .fetchPolyfill(fetch)
+    .headers({
+        'User-Agent': `${await getIdentifier()}/${await getVersion()}`,
+    });
